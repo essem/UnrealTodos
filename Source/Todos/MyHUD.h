@@ -4,8 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/HUD.h"
-#include "Actions.h"
 #include "MyHUD.generated.h"
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnStateChanged, const UAppState*, State, const UAppState*, PrevState);
 
 UCLASS()
 class TODOS_API AMyHUD : public AHUD
@@ -15,12 +16,16 @@ class TODOS_API AMyHUD : public AHUD
 	virtual void BeginPlay() override;
 	
 public:
-	UFUNCTION(BlueprintPure, meta = (HidePin = "WorldContextObject", DefaultToSelf = "WorldContextObject", DisplayName = "Create Action", CompactNodeTitle = "Create"), Category = "Redux")
-	static UAction* CreateAction(UObject* WorldContextObject, TSubclassOf<UAction> ActionClass);
-
 	UFUNCTION(BlueprintCallable, Category = "Redux")
 	void Dispatch(const UAction* Action);
 
+	UPROPERTY(BlueprintAssignable, Category = "Redux")
+	FOnStateChanged OnStateChanged;
+
 private:
-	TSharedPtr<struct FAppState> State;
+	UPROPERTY()
+	UAppState* State;
+
+	UPROPERTY()
+	UAppState* PrevState;
 };
