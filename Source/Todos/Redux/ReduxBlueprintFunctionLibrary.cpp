@@ -3,6 +3,8 @@
 #include "ReduxBlueprintFunctionLibrary.h"
 #include "Actions.h"
 #include "MyHUD.h"
+#include "Redux/Store.h"
+#include "Redux/State.h"
 
 UAction* UReduxBlueprintFunctionLibrary::CreateAction(UObject* WorldContextObject, TSubclassOf<UAction> ActionClass)
 {
@@ -14,5 +16,14 @@ void UReduxBlueprintFunctionLibrary::Dispatch(UObject* WorldContextObject, const
 {
 	UWorld* World = GEngine->GetWorldFromContextObjectChecked(WorldContextObject);
 	AMyHUD* MyHUD = Cast<AMyHUD>(World->GetFirstPlayerController()->GetHUD());
-	MyHUD->Dispatch(Action);
+	MyHUD->GetStore()->Dispatch(Action);
+}
+
+UAppState* UReduxBlueprintFunctionLibrary::GetAppState(UObject* WorldContextObject)
+{
+	UWorld* World = GEngine->GetWorldFromContextObjectChecked(WorldContextObject);
+	AMyHUD* MyHUD = Cast<AMyHUD>(World->GetFirstPlayerController()->GetHUD());
+
+	// Blueprint does not understand const pointer
+	return const_cast<UAppState*>(&MyHUD->GetStore()->GetAppState());
 }

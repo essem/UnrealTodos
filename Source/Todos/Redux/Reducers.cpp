@@ -8,6 +8,21 @@ TArray<UTodoState*> TodosReducer(const TArray<UTodoState*>* State, const UAction
 {
 	if (!State)
 	{
+		//TArray<UTodoState*> NewState;
+
+		//UTodoState* TodoState = NewObject<UTodoState>();
+		//TodoState->Id = 100;
+		//TodoState->Text = FText::FromString("Apple");
+		//TodoState->bCompleted = true;
+		//NewState.Add(TodoState);
+
+		//TodoState = NewObject<UTodoState>();
+		//TodoState->Id = 101;
+		//TodoState->Text = FText::FromString("Orange");
+		//TodoState->bCompleted = false;
+		//NewState.Add(TodoState);
+
+		//return MoveTemp(NewState);
 		return TArray<UTodoState*>();
 	}
 

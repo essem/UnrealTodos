@@ -6,26 +6,20 @@
 #include "GameFramework/HUD.h"
 #include "MyHUD.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnStateChanged, const UAppState*, State, const UAppState*, PrevState);
+class UStore;
 
 UCLASS()
 class TODOS_API AMyHUD : public AHUD
 {
 	GENERATED_BODY()
 
-	virtual void BeginPlay() override;
-	
 public:
 	UFUNCTION(BlueprintCallable, Category = "Redux")
-	void Dispatch(const UAction* Action);
-
-	UPROPERTY(BlueprintAssignable, Category = "Redux")
-	FOnStateChanged OnStateChanged;
+	UStore* GetStore();
 
 private:
-	UPROPERTY()
-	UAppState* State;
+	virtual void BeginPlay() override;
 
 	UPROPERTY()
-	UAppState* PrevState;
+	UStore* Store;
 };

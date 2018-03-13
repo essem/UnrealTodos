@@ -22,7 +22,6 @@ class UAction : public UObject
 
 public:
 	virtual EActionType GetType() const { check(0 && "You must override this"); return EActionType::INVALID; };
-	virtual UStruct* GetStaticStruct() const { check(0 && "You must override this"); return nullptr; };
 	virtual const class UAddTodoAction* CastToAddTodoAction() const { return nullptr; }
 	virtual const class USetVisibilityFilterAction* CastToSetVisibilityFilterAction() const { return nullptr; }
 	virtual const class UToggleTodoAction* CastToToggleTodoAction() const { return nullptr; }
@@ -36,7 +35,6 @@ class UAddTodoAction : public UAction
 public:
 	virtual EActionType GetType() const override { return EActionType::ADD_TODO; }
 	virtual const UAddTodoAction* CastToAddTodoAction() const override { return this; }
-	virtual UStruct* GetStaticStruct() const override { return UAddTodoAction::StaticClass(); };
 
 	UPROPERTY(BlueprintReadWrite)
 	int32 Id;
@@ -53,7 +51,6 @@ class UToggleTodoAction : public UAction
 public:
 	virtual EActionType GetType() const override { return EActionType::TOGGLE_TODO; }
 	virtual const UToggleTodoAction* CastToToggleTodoAction() const override { return this; }
-	virtual UStruct* GetStaticStruct() const override { return UToggleTodoAction::StaticClass(); };
 
 	UPROPERTY(BlueprintReadWrite)
 	int32 Id;
@@ -67,7 +64,6 @@ class USetVisibilityFilterAction : public UAction
 public:
 	virtual EActionType GetType() const override { return EActionType::SET_VISIBILITY_FILTER; }
 	virtual const USetVisibilityFilterAction* CastToSetVisibilityFilterAction() const override { return this; }
-	virtual UStruct* GetStaticStruct() const override { return USetVisibilityFilterAction::StaticClass(); };
 
 	UPROPERTY(BlueprintReadWrite)
 	FString Filter;

@@ -6,15 +6,8 @@
 #include "GameFramework/GameModeBase.h"
 #include "TodosGameModeBase.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class TODOS_API ATodosGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
-	
-	
-	
-	
 };

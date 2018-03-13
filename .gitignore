@@ -3,3 +3,5 @@ Binaries/
 Intermediate/
 Saved/
 *.sln
+*.VC.db
+*.VC.opendb

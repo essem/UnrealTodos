@@ -26,7 +26,7 @@ UCLASS(BlueprintType)
 class UAppState : public UObject
 {
 	GENERATED_BODY()
-		
+
 public:
 	UPROPERTY(BlueprintReadOnly)
 	TArray<UTodoState*> Todos;
