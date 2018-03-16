@@ -28,8 +28,8 @@ private:
 	void DumpState(const UAppState& State) const;
 
 	UPROPERTY()
-	UAppState* State;
+	const UAppState* State;
 
 	UPROPERTY()
-	UAppState* PrevState;
+	const UAppState* PrevState;
 };

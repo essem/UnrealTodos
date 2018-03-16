@@ -4,6 +4,35 @@
 #include "Actions.h"
 #include "State.h"
 
+const UAppState* AppReducer(const UAppState* State, const UAction* Action)
+{
+	if (!State)
+	{
+		UAppState* NewState = NewObject<UAppState>();
+		NewState->Todos = TodosReducer(nullptr, nullptr);
+		NewState->VisibilityFilter = VisibilityFilterReducer(nullptr, nullptr);
+		return NewState;
+	}
+
+	bool bChanged = false;
+
+	const UTodoStateArray* NewTodos = TodosReducer(State->Todos, Action);
+	bChanged = bChanged || State->Todos != NewTodos;
+
+	const UStateString* NewVisibilityFilter = VisibilityFilterReducer(State->VisibilityFilter, Action);
+	bChanged = bChanged || State->VisibilityFilter != NewVisibilityFilter;
+
+	if (!bChanged)
+	{
+		return State;
+	}
+
+	UAppState* NewState = NewObject<UAppState>();
+	NewState->Todos = NewTodos;
+	NewState->VisibilityFilter = NewVisibilityFilter;
+	return NewState;
+}
+
 const UTodoStateArray* TodosReducer(const UTodoStateArray* State, const UAction* Action)
 {
 	if (!State)

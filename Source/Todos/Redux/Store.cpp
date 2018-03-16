@@ -9,10 +9,7 @@
 
 void UStore::Init()
 {
-	State = NewObject<UAppState>();
-	State->Todos = TodosReducer(nullptr, nullptr);
-	State->VisibilityFilter = VisibilityFilterReducer(nullptr, nullptr);
-
+	State = AppReducer(nullptr, nullptr);
 	DumpState(*State);
 }
 
@@ -27,27 +24,12 @@ void UStore::Dispatch(const UAction* Action)
 
 	DumpAction(*Action);
 
-	// Apply reducers
-
-	bool bChanged = false;
-
-	const UTodoStateArray* NewTodos = TodosReducer(State->Todos, Action);
-	bChanged = bChanged || State->Todos != NewTodos;
-
-	const UStateString* NewVisibilityFilter = VisibilityFilterReducer(State->VisibilityFilter, Action);
-	bChanged = bChanged || State->VisibilityFilter != NewVisibilityFilter;
-
-	// Fire event if state is changed
-
-	if (bChanged)
+	const UAppState* NewState = AppReducer(State, Action);
+	if (NewState != State)
 	{
 		PrevState = State;
-		State = NewObject<UAppState>();
-		State->Todos = NewTodos;
-		State->VisibilityFilter = NewVisibilityFilter;
-
+		State = NewState;
 		DumpState(*State);
-
 		OnStateChanged.Broadcast(State, PrevState);
 	}
 }
