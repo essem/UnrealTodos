@@ -6,8 +6,17 @@
 #include "UObject/NoExportTypes.h"
 #include "State.generated.h"
 
+UCLASS(BlueprintType, Abstract)
+class UReduxState : public UObject
+{
+	GENERATED_BODY()
+
+public:
+	virtual TSharedPtr<FJsonValue> toJSON() const;
+};
+
 UCLASS(BlueprintType)
-class UStateString : public UObject
+class UStateString : public UReduxState
 {
 	GENERATED_BODY()
 
@@ -17,12 +26,14 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Redux")
 	const FString& GetString() const;
 
+	virtual TSharedPtr<FJsonValue> toJSON() const;
+
 private:
 	FString String;
 };
 
 UCLASS(BlueprintType)
-class UTodoState : public UObject
+class UTodoState : public UReduxState
 {
 	GENERATED_BODY()
 
@@ -38,7 +49,7 @@ public:
 };
 
 UCLASS(BlueprintType)
-class UTodoStateArray : public UObject
+class UTodoStateArray : public UReduxState
 {
 	GENERATED_BODY()
 
@@ -48,13 +59,15 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Redux")
 	const TArray<UTodoState*>& GetArray() const;
 
+	virtual TSharedPtr<FJsonValue> toJSON() const;
+
 private:
 	UPROPERTY()
 	TArray<UTodoState*> Array;
 };
 
 UCLASS(BlueprintType)
-class UAppState : public UObject
+class UAppState : public UReduxState
 {
 	GENERATED_BODY()
 

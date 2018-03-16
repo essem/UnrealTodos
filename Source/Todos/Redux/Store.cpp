@@ -69,6 +69,11 @@ void UStore::DumpState(const UAppState& State) const
 		if (UObjectProperty* ObjectProperty = Cast<UObjectProperty>(Property))
 		{
 			UObject* Object = ObjectProperty->GetObjectPropertyValue(Value);
+			UReduxState* State = Cast<UReduxState>(Object);
+			if (State)
+			{
+				return State->toJSON();
+			}
 			TSharedRef<FJsonObject> OutJson = MakeShareable(new FJsonObject());
 			FJsonObjectConverter::UStructToJsonObject(Object->GetClass(), Object, OutJson, 0, 0);
 			return MakeShareable(new FJsonValueObject(OutJson));
