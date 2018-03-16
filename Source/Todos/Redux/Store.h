@@ -14,11 +14,24 @@ class TODOS_API UStore : public UObject
 	GENERATED_BODY()
 
 public:
+	UStore();
 	void Init();
 	const UAppState& GetAppState() const;
 
 	UFUNCTION(BlueprintCallable, Category = "Redux")
 	void Dispatch(const UAction* Action);
+
+	UFUNCTION(BlueprintPure, Category = "Redux")
+	bool CanUndo() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Redux")
+	void Undo();
+
+	UFUNCTION(BlueprintPure, Category = "Redux")
+	bool CanRedo() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Redux")
+	void Redo();
 
 	UPROPERTY(BlueprintAssignable, Category = "Redux")
 	FOnStateChanged OnStateChanged;
@@ -28,8 +41,7 @@ private:
 	void DumpState(const UAppState& State) const;
 
 	UPROPERTY()
-	const UAppState* State;
+	TArray<const UAppState*> States;
 
-	UPROPERTY()
-	const UAppState* PrevState;
+	int32 CurrentStateIndex;
 };

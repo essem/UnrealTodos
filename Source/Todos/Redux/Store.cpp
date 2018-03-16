@@ -7,15 +7,22 @@
 #include "State.h"
 #include "Reducers.h"
 
+UStore::UStore()
+	: CurrentStateIndex(-1)
+{
+}
+
 void UStore::Init()
 {
-	State = AppReducer(nullptr, nullptr);
-	DumpState(*State);
+	States.Add(AppReducer(nullptr, nullptr));
+	CurrentStateIndex = 0;
+
+	DumpState(*States[CurrentStateIndex]);
 }
 
 const UAppState& UStore::GetAppState() const
 {
-	return *State;
+	return *States[CurrentStateIndex];
 }
 
 void UStore::Dispatch(const UAction* Action)
@@ -24,15 +31,59 @@ void UStore::Dispatch(const UAction* Action)
 
 	DumpAction(*Action);
 
-	const UAppState* NewState = AppReducer(State, Action);
-	if (NewState != State)
+	const UAppState* CurState = States[CurrentStateIndex];
+	const UAppState* NewState = AppReducer(CurState, Action);
+	if (NewState != CurState)
 	{
-		PrevState = State;
-		State = NewState;
-		DumpState(*State);
-		OnStateChanged.Broadcast(State, PrevState);
+		if (States.Num() > CurrentStateIndex + 1)
+		{
+			States.SetNum(CurrentStateIndex + 1);
+		}
+
+		States.Add(NewState);
+		++CurrentStateIndex;
+
+		DumpState(*NewState);
+		OnStateChanged.Broadcast(NewState, CurState);
 	}
 }
+
+bool UStore::CanUndo() const
+{
+	return CurrentStateIndex > 0;
+}
+
+void UStore::Undo()
+{
+	if (CanUndo())
+	{
+		const UAppState* CurState = States[CurrentStateIndex];
+		--CurrentStateIndex;
+		const UAppState* NewState = States[CurrentStateIndex];
+
+		DumpState(*NewState);
+		OnStateChanged.Broadcast(NewState, CurState);
+	}
+}
+
+bool UStore::CanRedo() const
+{
+	return CurrentStateIndex < States.Num() - 1;
+}
+
+void UStore::Redo()
+{
+	if (CanRedo())
+	{
+		const UAppState* CurState = States[CurrentStateIndex];
+		++CurrentStateIndex;
+		const UAppState* NewState = States[CurrentStateIndex];
+
+		DumpState(*NewState);
+		OnStateChanged.Broadcast(NewState, CurState);
+	}
+}
+
 
 void UStore::DumpAction(const UAction& Action) const
 {
