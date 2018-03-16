@@ -4,8 +4,9 @@
 
 #include "CoreMinimal.h"
 
-class UTodoState;
+class UStateString;
+class UTodoStateArray;
 class UAction;
 
-TArray<UTodoState*> TodosReducer(const TArray<UTodoState*>* State, const UAction* Action);
-FString VisibilityFilterReducer(const FString* State, const UAction* Action);
+const UTodoStateArray* TodosReducer(const UTodoStateArray* State, const UAction* Action);
+const UStateString* VisibilityFilterReducer(const UStateString* State, const UAction* Action);

@@ -31,10 +31,10 @@ void UStore::Dispatch(const UAction* Action)
 
 	bool bChanged = false;
 
-	TArray<UTodoState*> NewTodos = TodosReducer(&State->Todos, Action);
+	const UTodoStateArray* NewTodos = TodosReducer(State->Todos, Action);
 	bChanged = bChanged || State->Todos != NewTodos;
 
-	FString NewVisibilityFilter = VisibilityFilterReducer(&State->VisibilityFilter, Action);
+	const UStateString* NewVisibilityFilter = VisibilityFilterReducer(State->VisibilityFilter, Action);
 	bChanged = bChanged || State->VisibilityFilter != NewVisibilityFilter;
 
 	// Fire event if state is changed
