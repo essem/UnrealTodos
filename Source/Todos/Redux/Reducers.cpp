@@ -37,25 +37,24 @@ const UTodoStateArray* TodosReducer(const UTodoStateArray* State, const UAction*
 {
 	if (!State)
 	{
-		/* For test
-		TArray<UTodoState*> NewArray;
+		// Uncomment below to test
 
-		UTodoState* TodoState = NewObject<UTodoState>();
-		TodoState->Id = 100;
-		TodoState->Text = FText::FromString("Apple");
-		TodoState->bCompleted = true;
-		NewArray.Add(TodoState);
+		//TArray<UTodoState*> NewArray;
 
-		TodoState = NewObject<UTodoState>();
-		TodoState->Id = 101;
-		TodoState->Text = FText::FromString("Orange");
-		TodoState->bCompleted = false;
-		NewArray.Add(TodoState);
+		//UTodoState* TodoState = NewObject<UTodoState>();
+		//TodoState->Id = 100;
+		//TodoState->Text = UStateText::Create(FText::FromString("Apple"));
+		//TodoState->bCompleted = true;
+		//NewArray.Add(TodoState);
 
-		UTodoStateArray* NewState = NewObject<UTodoStateArray>();
-		NewState->Init(MoveTemp(NewArray));
-		return NewState;
-		*/
+		//TodoState = NewObject<UTodoState>();
+		//TodoState->Id = 101;
+		//TodoState->Text = UStateText::Create(FText::FromString("Orange"));
+		//TodoState->bCompleted = false;
+		//NewArray.Add(TodoState);
+
+		//return UTodoStateArray::Create(MoveTemp(NewArray));
+
 		return NewObject<UTodoStateArray>();
 	}
 
@@ -67,15 +66,13 @@ const UTodoStateArray* TodosReducer(const UTodoStateArray* State, const UAction*
 		TArray<UTodoState*> NewArray;
 		NewArray = State->GetArray(); // Shallow Copy
 
-		UTodoState* TodoState = NewObject<UTodoState>();
-		TodoState->Id = AddTodoAction->Id;
-		TodoState->Text = AddTodoAction->Text;
-		TodoState->bCompleted = false;
-		NewArray.Add(TodoState);
+		UTodoState* NewTodoState = NewObject<UTodoState>();
+		NewTodoState->Id = AddTodoAction->Id;
+		NewTodoState->Text = UStateText::Create(AddTodoAction->Text);
+		NewTodoState->bCompleted = false;
+		NewArray.Add(NewTodoState);
 
-		UTodoStateArray* NewState = NewObject<UTodoStateArray>();
-		NewState->Init(MoveTemp(NewArray));
-		return NewState;
+		return UTodoStateArray::Create(MoveTemp(NewArray));
 	}
 	case EActionType::TOGGLE_TODO:
 	{
@@ -95,9 +92,7 @@ const UTodoStateArray* TodosReducer(const UTodoStateArray* State, const UAction*
 			NewArray.Add(NewTodoState);
 		}
 
-		UTodoStateArray* NewState = NewObject<UTodoStateArray>();
-		NewState->Init(MoveTemp(NewArray));
-		return NewState;
+		return UTodoStateArray::Create(MoveTemp(NewArray));
 	}
 	default:
 		return State;
@@ -108,17 +103,13 @@ const UStateString* VisibilityFilterReducer(const UStateString* State, const UAc
 {
 	if (!State)
 	{
-		UStateString* NewState = NewObject<UStateString>();
-		NewState->Init(TEXT("SHOW_ALL"));
-		return NewState;
+		return UStateString::Create(TEXT("SHOW_ALL"));
 	}
 
 	switch (Action->GetType()) {
 	case EActionType::SET_VISIBILITY_FILTER:
 	{
-		UStateString* NewState = NewObject<UStateString>();
-		NewState->Init(*Action->CastToSetVisibilityFilterAction()->Filter);
-		return NewState;
+		return UStateString::Create(*Action->CastToSetVisibilityFilterAction()->Filter);
 	}
 	default:
 		return State;

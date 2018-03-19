@@ -96,26 +96,10 @@ void UStore::DumpAction(const UAction& Action) const
 
 void UStore::DumpState(const UAppState& State) const
 {
-	FJsonObjectConverter::CustomExportCallback ExportCb;
-	ExportCb.BindLambda([](UProperty* Property, const void* Value) -> TSharedPtr<FJsonValue>
-	{
-		if (UObjectProperty* ObjectProperty = Cast<UObjectProperty>(Property))
-		{
-			UObject* Object = ObjectProperty->GetObjectPropertyValue(Value);
-			UReduxState* State = Cast<UReduxState>(Object);
-			if (State)
-			{
-				return State->toJSON();
-			}
-			TSharedRef<FJsonObject> OutJson = MakeShareable(new FJsonObject());
-			FJsonObjectConverter::UStructToJsonObject(Object->GetClass(), Object, OutJson, 0, 0);
-			return MakeShareable(new FJsonValueObject(OutJson));
-		}
-
-		return TSharedPtr<FJsonValue>();
-	});
-
 	FString StateJson;
-	FJsonObjectConverter::UStructToJsonObjectString(UAppState::StaticClass(), &State, StateJson, 0, 0, 0, &ExportCb, true);
+	auto JsonWriter = TJsonWriterFactory<TCHAR, TPrettyJsonPrintPolicy<TCHAR>>::Create(&StateJson);
+	bool bSuccess = FJsonSerializer::Serialize(State.ToJson(), "", JsonWriter);
+	JsonWriter->Close();
+
 	UE_LOG(Redux, Display, TEXT("=== STATE ===\n%s"), *StateJson);
 }
