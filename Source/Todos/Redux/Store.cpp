@@ -5,16 +5,16 @@
 #include "JsonObjectConverter.h"
 #include "Actions.h"
 #include "State.h"
-#include "Reducers.h"
 
 UStore::UStore()
 	: CurrentStateIndex(-1)
 {
 }
 
-void UStore::Init()
+void UStore::Init(TSharedPtr<FReducer<UAppState>> InRootReducer)
 {
-	States.Add(AppReducer(nullptr, nullptr));
+	RootReducer = InRootReducer;
+	States.Add(RootReducer->GetInitialState());
 	CurrentStateIndex = 0;
 
 	DumpState(*States[CurrentStateIndex]);
@@ -32,7 +32,7 @@ void UStore::Dispatch(const UAction* Action)
 	DumpAction(*Action);
 
 	const UAppState* CurState = States[CurrentStateIndex];
-	const UAppState* NewState = AppReducer(CurState, Action);
+	const UAppState* NewState = RootReducer->Reduce(CurState, Action);
 	if (NewState != CurState)
 	{
 		if (States.Num() > CurrentStateIndex + 1)
@@ -83,7 +83,6 @@ void UStore::Redo()
 		OnStateChanged.Broadcast(NewState, CurState);
 	}
 }
-
 
 void UStore::DumpAction(const UAction& Action) const
 {
