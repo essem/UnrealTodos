@@ -12,12 +12,17 @@ const UStateString* SetVisibilityFilter(const UStateString* State, const UAction
 	return UStateString::Create(SetVisibilityFilterAction->Filter);
 }
 
-FVisibilityFilterReducer::FVisibilityFilterReducer()
+const UStateString* VisibilityFilterReducer(const UStateString* State, const UAction* Action)
 {
-	Register(EActionType::SET_VISIBILITY_FILTER, SetVisibilityFilter);
-}
+	if (!State)
+	{
+		return UStateString::Create(TEXT("SHOW_ALL"));
+	}
 
-const UStateString* FVisibilityFilterReducer::GetInitialState() const
-{
-	return UStateString::Create(TEXT("SHOW_ALL"));
+	switch (Action->GetType())
+	{
+	case EActionType::SET_VISIBILITY_FILTER: return SetVisibilityFilter(State, Action);
+	}
+
+	return State;
 }

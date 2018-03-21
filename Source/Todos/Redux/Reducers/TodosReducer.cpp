@@ -43,31 +43,36 @@ const UTodoStateArray* ToggleTodo(const UTodoStateArray* State, const UAction* A
 	return UTodoStateArray::Create(MoveTemp(NewArray));
 }
 
-FTodosReducer::FTodosReducer()
+const UTodoStateArray* TodosReducer(const UTodoStateArray* State, const UAction* Action)
 {
-	Register(EActionType::ADD_TODO, AddTodo);
-	Register(EActionType::TOGGLE_TODO, ToggleTodo);
-}
+	if (!State)
+	{
+		// Uncomment below to test
 
-const UTodoStateArray* FTodosReducer::GetInitialState() const
-{
-	// Uncomment below to test
+		//TArray<UTodoState*> NewArray;
 
-	//TArray<UTodoState*> NewArray;
+		//UTodoState* TodoState = NewObject<UTodoState>();
+		//TodoState->Id = 100;
+		//TodoState->Text = UStateText::Create(FText::FromString("Apple"));
+		//TodoState->bCompleted = true;
+		//NewArray.Add(TodoState);
 
-	//UTodoState* TodoState = NewObject<UTodoState>();
-	//TodoState->Id = 100;
-	//TodoState->Text = UStateText::Create(FText::FromString("Apple"));
-	//TodoState->bCompleted = true;
-	//NewArray.Add(TodoState);
+		//TodoState = NewObject<UTodoState>();
+		//TodoState->Id = 101;
+		//TodoState->Text = UStateText::Create(FText::FromString("Orange"));
+		//TodoState->bCompleted = false;
+		//NewArray.Add(TodoState);
 
-	//TodoState = NewObject<UTodoState>();
-	//TodoState->Id = 101;
-	//TodoState->Text = UStateText::Create(FText::FromString("Orange"));
-	//TodoState->bCompleted = false;
-	//NewArray.Add(TodoState);
+		//return UTodoStateArray::Create(MoveTemp(NewArray));
 
-	//return UTodoStateArray::Create(MoveTemp(NewArray));
+		return NewObject<UTodoStateArray>();
+	}
 
-	return NewObject<UTodoStateArray>();
+	switch (Action->GetType())
+	{
+	case EActionType::ADD_TODO: return AddTodo(State, Action);
+	case EActionType::TOGGLE_TODO: return ToggleTodo(State, Action);
+	}
+
+	return State;
 }

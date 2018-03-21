@@ -3,17 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "../Reducer.h"
-#include "TodosReducer.h"
-#include "VisibilityFilterReducer.h"
 
-class FAppReducer : public FReducer<UAppState>
-{
-public:
-	virtual const UAppState* GetInitialState() const override;
-	virtual const UAppState* Reduce(const UAppState* State, const UAction* Action) const override;
+class UAppState;
+class UAction;
 
-private:
-	FTodosReducer TodosReducer;
-	FVisibilityFilterReducer VisibilityFilterReducer;
-};
+const UAppState* AppReducer(const UAppState* State, const UAction* Action);

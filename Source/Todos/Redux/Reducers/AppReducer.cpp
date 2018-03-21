@@ -3,25 +3,27 @@
 #include "AppReducer.h"
 #include "../Actions.h"
 #include "../State.h"
+#include "TodosReducer.h"
+#include "VisibilityFilterReducer.h"
 
-const UAppState* FAppReducer::GetInitialState() const
+const UAppState* AppReducer(const UAppState* State, const UAction* Action)
 {
-	UAppState* NewState = NewObject<UAppState>();
-	NewState->Todos = TodosReducer.GetInitialState();
-	NewState->VisibilityFilter = VisibilityFilterReducer.GetInitialState();
-	return NewState;
-}
+	if (!State)
+	{
+		UAppState* NewState = NewObject<UAppState>();
+		NewState->Todos = TodosReducer(nullptr, nullptr);
+		NewState->VisibilityFilter = VisibilityFilterReducer(nullptr, nullptr);
+		return NewState;
+	}
 
-const UAppState* FAppReducer::Reduce(const UAppState* State, const UAction* Action) const
-{
-	check(State && Action);
+	check(Action);
 
 	bool bChanged = false;
 
-	const UTodoStateArray* NewTodos = TodosReducer.Reduce(State->Todos, Action);
+	const UTodoStateArray* NewTodos = TodosReducer(State->Todos, Action);
 	bChanged = bChanged || State->Todos != NewTodos;
 
-	const UStateString* NewVisibilityFilter = VisibilityFilterReducer.Reduce(State->VisibilityFilter, Action);
+	const UStateString* NewVisibilityFilter = VisibilityFilterReducer(State->VisibilityFilter, Action);
 	bChanged = bChanged || State->VisibilityFilter != NewVisibilityFilter;
 
 	if (!bChanged)

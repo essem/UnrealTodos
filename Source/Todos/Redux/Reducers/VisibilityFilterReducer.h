@@ -3,13 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "../Reducer.h"
 
 class UStateString;
+class UAction;
 
-class FVisibilityFilterReducer : public FLeafReducer<UStateString>
-{
-public:
-	FVisibilityFilterReducer();
-	virtual const UStateString* GetInitialState() const override;
-};
+const UStateString* VisibilityFilterReducer(const UStateString* State, const UAction* Action);

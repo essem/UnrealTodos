@@ -2,12 +2,11 @@
 
 #include "MyHUD.h"
 #include "Redux/Store.h"
-#include "Redux/Reducers/AppReducer.h"
 
 void AMyHUD::BeginPlay()
 {
 	Store = NewObject<UStore>();
-	Store->Init(MakeShareable(new FAppReducer()));
+	Store->Init();
 
 	Super::BeginPlay(); // Will create HUDWidget
 }

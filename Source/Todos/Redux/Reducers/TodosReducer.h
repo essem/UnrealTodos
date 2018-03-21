@@ -3,13 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "../Reducer.h"
 
 class UTodoStateArray;
+class UAction;
 
-class FTodosReducer : public FLeafReducer<UTodoStateArray>
-{
-public:
-	FTodosReducer();
-	virtual const UTodoStateArray* GetInitialState() const override;
-};
+const UTodoStateArray* TodosReducer(const UTodoStateArray* State, const UAction* Action);

@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include "Reducer.h"
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "Store.generated.h"
@@ -16,7 +15,7 @@ class TODOS_API UStore : public UObject
 
 public:
 	UStore();
-	void Init(TSharedPtr<FReducer<UAppState>> InRootReducer);
+	void Init();
 	const UAppState& GetAppState() const;
 
 	UFUNCTION(BlueprintCallable, Category = "Redux")
@@ -43,8 +42,6 @@ private:
 
 	UPROPERTY()
 	TArray<const UAppState*> States;
-
-	TSharedPtr<FReducer<UAppState>> RootReducer;
 
 	int32 CurrentStateIndex;
 };
